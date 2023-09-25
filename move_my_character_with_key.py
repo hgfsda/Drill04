@@ -6,12 +6,26 @@ tuk_ground = load_image('TUK_GROUND.png')
 character = load_image('character.png')
 
 def handle_events():
-    global running
+    global running, dir_x, dir_y, dir_check
 
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             running = False
+        elif event.type == SDL_KEYDOWN:
+            if event.key == SDLK_RIGHT:
+                dir_x += 1
+                dir_check = 1
+            elif event.key == SDLK_LEFT:
+                dir_x -= 1
+                dir_check = 2
+            elif event.key == SDLK_ESCAPE:
+                running = False
+        elif event.type == SDL_KEYUP:
+            if event.key == SDLK_RIGHT:
+                dir_x -= 1
+            elif event.key == SDLK_LEFT:
+                dir_x += 1
 
 running = True
 x = 800 // 2
@@ -29,6 +43,10 @@ while running:
     update_canvas()
     handle_events()
     frame = (frame + 1) % 8
+    if x <= 760 and x >= 40: x += dir_x * 10
+    elif x > 760: x = 760
+    elif x < 40: x = 40
+    y += dir_y * 10
     delay(0.08)
 
 close_canvas()
